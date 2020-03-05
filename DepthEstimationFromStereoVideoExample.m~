@@ -58,9 +58,9 @@ disparityMap4 = disparitySSD(frameLeftGray,frameRightGray,11);
 
 figure;
 subplot(2,2,1),imshow(disparityMap,[0,64]),title('Build-in Disparity Map'),colormap jet,colorbar;
-subplot(2,2,2),imshow(disparityMap2,[0,64]),title('Disparity SSD window size 1'),colormap jet,colorbar;
-subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Disparity SSD window size 5'),colormap jet,colorbar;
-subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Disparity SSD window size 11'),colormap jet,colorbar;
+subplot(2,2,2),imshow(disparityMap2,[0,64]),title(' Disparity'),colormap jet,colorbar;
+subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Build-in Disparity Map'),colormap jet,colorbar;
+subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Build-in Disparity Map'),colormap jet,colorbar;
 %% Reconstruct the 3-D Scene
 % Reconstruct the 3-D world coordinates of points corresponding to each pixel 
 % from the disparity map.
