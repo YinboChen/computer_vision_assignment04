@@ -5,8 +5,11 @@
 %    img_R = imread('frame_1R.png');
 % % testing
 % 
-  img_L = frameLeftGray;
-  img_R = frameRightGray;
+%   img_L = frameLeftGray;
+%   img_R = frameRightGray;
+  
+  img_L = frameRightGray;
+  img_R = frameLeftGray;
 
 %   img_L = rgb2gray(img_L);
 %   img_R = rgb2gray(img_R);
@@ -40,7 +43,11 @@ for i = w+1: R_new - w
 
     for j = w+1:C_new - w
 %         set up the boundary of column
-         pix_value_L = sum(sum(new_imgL(i-w+1:i+w,j-w+1:j+w)))/(windowSize_local^2);
+          if windowSize == 1
+              pix_value_L = sum(sum(new_imgL(i,j)));
+          else
+              pix_value_L = sum(sum(new_imgL(i-w+1:i+w,j-w+1:j+w)))/(windowSize_local^2);
+          end
 %    compute whole pixels' values in the window and find the mean value
           min_diff = 1000;
           bestX = 1;
@@ -48,13 +55,16 @@ for i = w+1: R_new - w
 %                set the max disparity range when j+ max-range less than
 %                max column of image
                 for m = j : j+ max_disparityRang  
-                   pix_value = sum(sum(new_imgR(i-w+1:i+w,m-w+1:m+w)))/(windowSize_local^2);
+                    if windowSize == 1
+                        pix_value = sum(sum(new_imgR(i,m)));
+                    else
+                        pix_value = sum(sum(new_imgR(i-w+1:i+w,m-w+1:m+w)))/(windowSize_local^2);
+                    end
                    diff = sum((pix_value - pix_value_L)^2);
 %                    find the min different value as well as the best x value
                          if diff< min_diff
                              min_diff = diff;
-                             bestX = m;
-                             
+                             bestX = m;                                              
                          end  
                     
 %                 disparity(i,j) = (new_imgR(i,bestX) - new_imgL(i,j));
@@ -66,7 +76,11 @@ for i = w+1: R_new - w
 %                     set the max disparity range when j+ range large than
 %                     image's max column
                for n = j : C_new -w 
-                   pix_value = sum(sum(new_imgR(i-w+1:i+w,n-w+1:n+w)))/(windowSize_local^2);  
+                   if windowSize == 1
+                        pix_value = sum(sum(new_imgR(i,n)));
+                   else
+                       pix_value = sum(sum(new_imgR(i-w+1:i+w,n-w+1:n+w)))/(windowSize_local^2);
+                   end
                    diff = sum((pix_value - pix_value_L)^2);
                          if diff< min_diff
                              min_diff = diff;

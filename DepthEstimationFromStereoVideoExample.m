@@ -48,7 +48,7 @@ frameLeftGray  = rgb2gray(frameLeftRect);
 frameRightGray = rgb2gray(frameRightRect);
 
 disparityMap = disparity(frameLeftGray, frameRightGray);
-disparityMap2 = disparitySSD(frameRightGray,frameLeftGray,5);
+disparityMap2 = disparitySSD(frameLeftGray,frameRightGray,1);
 % imshow(disparityMap, [0, 64]);
 % title('Disparity Map');
 % colormap jet
