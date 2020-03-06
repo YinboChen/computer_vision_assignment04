@@ -46,21 +46,25 @@ title('Rectified Video Frames');
 
 frameLeftGray  = rgb2gray(frameLeftRect);
 frameRightGray = rgb2gray(frameRightRect);
+% part 1 for SSD
 
-disparityMap = disparity(frameLeftGray, frameRightGray);
-disparityMap2 = disparitySSD(frameLeftGray,frameRightGray,1);
-disparityMap3 = disparitySSD(frameLeftGray,frameRightGray,5);
-disparityMap4 = disparitySSD(frameLeftGray,frameRightGray,11);
-% imshow(disparityMap, [0, 64]);
-% title('Disparity Map');
-% colormap jet
-% colorbar;
+% disparityMap = disparity(frameLeftGray, frameRightGray);
+% disparityMap2 = disparitySSD(frameLeftGray,frameRightGray,1);
+% disparityMap3 = disparitySSD(frameLeftGray,frameRightGray,5);
+% disparityMap4 = disparitySSD(frameLeftGray,frameRightGray,11);
 
+disparityMap = disparityNCC(frameLeftGray,frameRightGray,3);
 figure;
-subplot(2,2,1),imshow(disparityMap,[0,64]),title('Build-in Disparity Map'),colormap jet,colorbar;
-subplot(2,2,2),imshow(disparityMap2,[0,64]),title('Disparity SSD window size 1'),colormap jet,colorbar;
-subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Disparity SSD window size 5'),colormap jet,colorbar;
-subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Disparity SSD window size 11'),colormap jet,colorbar;
+imshow(disparityMap,[0,64]);
+title('Disparity NCC window size 3')
+colormap jet 
+colorbar;
+
+% figure;
+% subplot(2,2,1),imshow(disparityMap,[0,64]),title('Build-in Disparity Map'),colormap jet,colorbar;
+% subplot(2,2,2),imshow(disparityMap2,[0,64]),title('Disparity SSD window size 1'),colormap jet,colorbar;
+% subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Disparity SSD window size 5'),colormap jet,colorbar;
+% subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Disparity SSD window size 11'),colormap jet,colorbar;
 %% Reconstruct the 3-D Scene
 % Reconstruct the 3-D world coordinates of points corresponding to each pixel 
 % from the disparity map.

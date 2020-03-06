@@ -1,4 +1,5 @@
  function[disparityMap] = disparitySSD(frameLeftGray, frameRightGray, windowSize)
+ 
 % clc;
 % clear all;
 %    img_L = imread('frame_1L.png');
@@ -92,6 +93,7 @@ for i = w+1: R_new - w
            end       
     end    
      100*i/(R_new - w)
+%      counting time remain
 end
  disparityMap = single(disparity);
 %  figure;
