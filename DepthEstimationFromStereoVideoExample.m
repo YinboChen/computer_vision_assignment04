@@ -5,6 +5,8 @@
 % Load the |stereoParameters| object, which is the result of calibrating the 
 % camera using either the |stereoCameraCalibrator| app or the |estimateCameraParameters| 
 % function.
+clc;
+clear all;
 
 % Load the stereoParameters object.
 load('handshakeStereoParams.mat');
@@ -53,18 +55,31 @@ frameRightGray = rgb2gray(frameRightRect);
 % disparityMap3 = disparitySSD(frameLeftGray,frameRightGray,5);
 % disparityMap4 = disparitySSD(frameLeftGray,frameRightGray,11);
 
-disparityMap = disparityNCC(frameLeftGray,frameRightGray,3);
-figure;
-imshow(disparityMap,[0,64]);
-title('Disparity NCC window size 3')
-colormap jet 
-colorbar;
-
 % figure;
 % subplot(2,2,1),imshow(disparityMap,[0,64]),title('Build-in Disparity Map'),colormap jet,colorbar;
 % subplot(2,2,2),imshow(disparityMap2,[0,64]),title('Disparity SSD window size 1'),colormap jet,colorbar;
 % subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Disparity SSD window size 5'),colormap jet,colorbar;
 % subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Disparity SSD window size 11'),colormap jet,colorbar;
+
+% part 2 for NCC
+
+disparityMap = disparity(frameLeftGray, frameRightGray);
+disparityMap2 = disparityNCC(frameLeftGray,frameRightGray,3);
+disparityMap3= disparityNCC(frameLeftGray,frameRightGray,5);
+disparityMap4 = disparityNCC(frameLeftGray,frameRightGray,7);
+% figure;
+% imshow(disparityMap,[0,64]);
+% title('Disparity NCC window size 3');
+% colormap jet 
+% colorbar
+
+figure;
+subplot(2,2,1),imshow(disparityMap,[0,64]),title('Build-in Disparity Map'),colormap jet, colorbar;
+subplot(2,2,2),imshow(disparityMap2,[0,64]),title('Disparity NCC window size 3'),colormap jet,colorbar;
+subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Disparity NCC window size 5'),colormap jet,colorbar;
+subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Disparity NCC window size 7'),colormap jet,colorbar;
+
+
 %% Reconstruct the 3-D Scene
 % Reconstruct the 3-D world coordinates of points corresponding to each pixel 
 % from the disparity map.

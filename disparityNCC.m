@@ -19,7 +19,7 @@ max_disparityRang = 64;
 % set up the maximum and minimum disparity ranges
 
 % windowSize_local = windowSize;
-windowSize_local = 5;
+windowSize_local = windowSize;
 w = round((windowSize_local -1)/2);
 % windowSize = 2w+1, kernal size
 
@@ -42,7 +42,7 @@ for i = w+1: R_new - w
                     ncc_Max = 0;
 %                    set threshold
                 for k = 0: max_disparityRang
-%                    define the range of compared windows for (0 : 64 by default)          
+%                    define the range of compared windows from (0 : 64 by default)          
                      windowpixels_L = new_imgL(i-w+1:i+w,j-w+1+k:j+w+k);
 %                      L =size(windowpixels_L)
 %                      R =size(windowpixels_R)
@@ -62,7 +62,7 @@ for i = w+1: R_new - w
              elseif j+ max_disparityRang > C_new-w
                  
                  for k = 0 - max_disparityRang + (C_new - w -j): C_new - w -j
-%                    define the range of compared windows for (0 : C_new - w -j )          
+%                    define the range of compared windows from (-X : C_new - w -j ),the sum equ to max_disparityRang          
                      windowpixels_L = new_imgL(i-w+1:i+w,j-w+1+k:j+w+k);
                      temple1 = sum(windowpixels_L.* windowpixels_R, 'all');
                      temple2 = sum(windowpixels_R.* windowpixels_R, 'all');
