@@ -1,5 +1,12 @@
 function [disparityMap] = disparityNCC(frameLeftGray, frameRightGray, windowSize)
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CSCI 5722 Computer Vision
+% Name: Yinbo Chen
+% Professor: Ioana Fleming
+% Assignment: HW4 
+% Purpose: Stereo Vision 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
 %      img_L = double(rgb2gray(imread('frame_1L.png')));
 %      img_R = double(rgb2gray(imread('frame_1R.png')));

@@ -12,7 +12,7 @@ clear all;
 load('handshakeStereoParams.mat');
 
 % Visualize camera extrinsics.
-showExtrinsics(stereoParams);
+% showExtrinsics(stereoParams);
 %% Create Video File Readers and the Video Player
 % Create System Objects for reading and displaying the video.
 
@@ -36,9 +36,9 @@ frameRight = readerRight.step();
 [frameLeftRect, frameRightRect] = ...
     rectifyStereoImages(frameLeft, frameRight, stereoParams);
 
-figure;
-imshow(stereoAnaglyph(frameLeftRect, frameRightRect));
-title('Rectified Video Frames');
+% figure;
+% imshow(stereoAnaglyph(frameLeftRect, frameRightRect));
+% title('Rectified Video Frames');
 %% Compute Disparity
 % In rectified stereo images any pair of corresponding points are located on 
 % the same pixel row. For each pixel in the left image compute the distance to 
@@ -48,7 +48,7 @@ title('Rectified Video Frames');
 
 frameLeftGray  = rgb2gray(frameLeftRect);
 frameRightGray = rgb2gray(frameRightRect);
-% part 1 for SSD
+% part Q4.1 for SSD
 
 % disparityMap = disparity(frameLeftGray, frameRightGray);
 % disparityMap2 = disparitySSD(frameLeftGray,frameRightGray,1);
@@ -61,24 +61,46 @@ frameRightGray = rgb2gray(frameRightRect);
 % subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Disparity SSD window size 5'),colormap jet,colorbar;
 % subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Disparity SSD window size 11'),colormap jet,colorbar;
 
-% part 2 for NCC
+% part Q4.2 for NCC
 
-disparityMap = disparity(frameLeftGray, frameRightGray);
-disparityMap2 = disparityNCC(frameLeftGray,frameRightGray,3);
-disparityMap3= disparityNCC(frameLeftGray,frameRightGray,5);
-disparityMap4 = disparityNCC(frameLeftGray,frameRightGray,7);
+% disparityMap = disparity(frameLeftGray, frameRightGray);
+% disparityMap2 = disparityNCC(frameLeftGray,frameRightGray,3);
+% disparityMap3= disparityNCC(frameLeftGray,frameRightGray,5);
+% disparityMap4 = disparityNCC(frameLeftGray,frameRightGray,7);
+% 
 % figure;
-% imshow(disparityMap,[0,64]);
-% title('Disparity NCC window size 3');
-% colormap jet 
-% colorbar
+% subplot(2,2,1),imshow(disparityMap,[0,64]),title('Build-in Disparity Map'),colormap jet, colorbar;
+% subplot(2,2,2),imshow(disparityMap2,[0,64]),title('Disparity NCC window size 3'),colormap jet,colorbar;
+% subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Disparity NCC window size 5'),colormap jet,colorbar;
+% subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Disparity NCC window size 7'),colormap jet,colorbar;
+
+% part Q4.3 for Uniquencess constraint
+
+% disparityMap = disparity(frameLeftGray, frameRightGray);
+% disparityMap1 = disparitySSD(frameLeftGray,frameRightGray,5);
+% disparityMap2 = disparitySSD_unique(frameLeftGray,frameRightGray,5);
+% 
+% figure;
+% subplot(1,3,1),imshow(disparityMap,[0,64]),title('Build-in Disparity Map'),colormap jet, colorbar;
+% subplot(1,3,2),imshow(disparityMap1,[0,64]),title('Disparity SSD window size 5'),colormap jet,colorbar;
+% subplot(1,3,3),imshow(disparityMap2,[0,64]),title('Unique Constraint SSD window size 5'),colormap jet,colorbar;
+
+% disparityMap_LR = disparitySSD(frameLeftGray,frameRightGray,5);
+% disparityMap_RL = fliplr(disparitySSD(fliplr(frameRightGray),fliplr(frameLeftGray),5));
+
+
+disparityMap_LR = disparityNCC(frameLeftGray,frameRightGray,5);
+disparityMap_RL = fliplr(disparityNCC(fliplr(frameRightGray),fliplr(frameLeftGray),5));
 
 figure;
-subplot(2,2,1),imshow(disparityMap,[0,64]),title('Build-in Disparity Map'),colormap jet, colorbar;
-subplot(2,2,2),imshow(disparityMap2,[0,64]),title('Disparity NCC window size 3'),colormap jet,colorbar;
-subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Disparity NCC window size 5'),colormap jet,colorbar;
-subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Disparity NCC window size 7'),colormap jet,colorbar;
-
+subplot(1,2,1),imshow(disparityMap_LR,[0 64]);
+title('L_R')
+colormap jet
+colorbar;
+subplot(1,2,2),imshow(disparityMap_RL,[0 64]);
+title('R_L')
+colormap jet
+colorbar
 
 %% Reconstruct the 3-D Scene
 % Reconstruct the 3-D world coordinates of points corresponding to each pixel 
