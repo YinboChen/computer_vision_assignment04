@@ -89,7 +89,8 @@ for i = w+1: R_new - w
   
     end
 end
- disparityMap = uint8(disparity);
+ tempdisp(1:R,1:C,:) = disparity(w+1:R_new-w,w+1:C_new -w,:);
+ disparityMap = uint8(tempdisp);
 %  figure;
 %  imshow(disparityMap,[0,64]);
 %  title('Disparity Map NCC')

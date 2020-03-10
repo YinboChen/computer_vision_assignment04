@@ -48,6 +48,7 @@ frameRight = readerRight.step();
 
 frameLeftGray  = rgb2gray(frameLeftRect);
 frameRightGray = rgb2gray(frameRightRect);
+
 % part Q4.1 for SSD
 
 % disparityMap = disparity(frameLeftGray, frameRightGray);
@@ -60,7 +61,7 @@ frameRightGray = rgb2gray(frameRightRect);
 % subplot(2,2,2),imshow(disparityMap2,[0,64]),title('Disparity SSD window size 1'),colormap jet,colorbar;
 % subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Disparity SSD window size 5'),colormap jet,colorbar;
 % subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Disparity SSD window size 11'),colormap jet,colorbar;
-
+% --------------------------------------------------------------------------------------------------------------------
 % part Q4.2 for NCC
 
 % disparityMap = disparity(frameLeftGray, frameRightGray);
@@ -74,6 +75,8 @@ frameRightGray = rgb2gray(frameRightRect);
 % subplot(2,2,3),imshow(disparityMap3,[0,64]),title('Disparity NCC window size 5'),colormap jet,colorbar;
 % subplot(2,2,4),imshow(disparityMap4,[0,64]),title('Disparity NCC window size 7'),colormap jet,colorbar;
 
+% --------------------------------------------------------------------------------------------------------------------
+
 % part Q4.3 for Uniquencess constraint
 
 % disparityMap = disparity(frameLeftGray, frameRightGray);
@@ -85,47 +88,63 @@ frameRightGray = rgb2gray(frameRightRect);
 % subplot(1,3,2),imshow(disparityMap1,[0,64]),title('Disparity SSD window size 5'),colormap jet,colorbar;
 % subplot(1,3,3),imshow(disparityMap2,[0,64]),title('Unique Constraint SSD window size 5'),colormap jet,colorbar;
 
-% disparityMap_LR = disparitySSD(frameLeftGray,frameRightGray,5);
-% disparityMap_RL = fliplr(disparitySSD(fliplr(frameRightGray),fliplr(frameLeftGray),5));
+% --------------------------------------------------------------------------------------------------------------------
 
 % part Q4.4 for Disparity smoothness constraint
-disparityMap = disparity(frameLeftGray, frameRightGray);
-disparityMap1 = disparitySSD(frameLeftGray,frameRightGray,5);
-disparityMap_SSD_smooth = disparitySSD_smooth(frameLeftGray,frameRightGray,5);
-figure;
-subplot(1,3,1),imshow(disparityMap,[0,64]),title('Build-in Disparity Map'),colormap jet, colorbar;
-subplot(1,3,2),imshow(disparityMap1,[0,64]),title('Disparity SSD window size 5'),colormap jet,colorbar;
-subplot(1,3,3),imshow(disparityMap_SSD_smooth,[0,64]),title('Disparity smoothness Constraint SSD window size 5'),colormap jet,colorbar;
 
-% disparityMap_LR = disparityNCC(frameLeftGray,frameRightGray,5);
-% disparityMap_RL = fliplr(disparityNCC(fliplr(frameRightGray),fliplr(frameLeftGray),5));
-% 
+% disparityMap = fliplr(disparitySSD(fliplr(frameRightGray),fliplr(frameLeftGray),3));
+% disparityMap1 = disparitySSD(frameLeftGray,frameRightGray,3);
+% disparityMap_SSD_smooth = disparitySSD_smooth(frameLeftGray,frameRightGray,3,1);
+% disparityMap_SSD_smooth2=fliplr(disparitySSD_smooth(fliplr(frameRightGray),fliplr(frameLeftGray),3,1));
 % figure;
-% subplot(1,2,1),imshow(disparityMap_LR,[0 64]);
-% title('L_R')
-% colormap jet
-% colorbar;
-% subplot(1,2,2),imshow(disparityMap_RL,[0 64]);
-% title('R_L')
-% colormap jet
-% colorbar
+% subplot(2,2,1),imshow(disparityMap1,[0,64]),title('Left-Right Disparity SSD window size 3'),colormap jet,colorbar;
+% subplot(2,2,2),imshow(disparityMap,[0,64]),title('Right-Left Disparity SSD window size 3'),colormap jet, colorbar;
+% subplot(2,2,3),imshow(disparityMap_SSD_smooth,[0,64]),title('Disparity Left-Right smoothness Constraint SSD window size 3'),colormap jet,colorbar;
+% subplot(2,2,4),imshow(disparityMap_SSD_smooth2,[0,64]),title('Disparity Right-Left smoothness Constraint SSD window size 3'),colormap jet,colorbar;
+
+% --------------------------------------------------------------------------------------------------------------------
+
+% part Q4.5 Generate outliers map
+
+%  disparityMap_SSD_LR = disparitySSD(frameLeftGray,frameRightGray,5);
+%  disparityMap_SSD_RL = fliplr(disparitySSD(fliplr(frameRightGray),fliplr(frameLeftGray),5));
+%  binary_image_SSD = detectOutliers(disparityMap_SSD_LR,disparityMap_SSD_RL,1);
+%  
+%  disparityMap_NCC_LR = disparityNCC(frameLeftGray,frameRightGray,5);
+%  disparityMap_NCC_RL = fliplr(disparityNCC(fliplr(frameRightGray),fliplr(frameLeftGray),5));
+%  binary_image_NCC = detectOutliers(disparityMap_NCC_LR,disparityMap_NCC_RL,1);
+ 
+%  figure;
+%   subplot(2,3,1),imshow(disparityMap_SSD_LR,[0,64]),title('Left-Right Disparity SSD window size 5'),colormap jet,colorbar;
+%   subplot(2,3,2),imshow(disparityMap_SSD_RL,[0,64]),title('Right-Left Disparity SSD window size 5'),colormap jet, colorbar;
+%   subplot(2,3,3),imshow(binary_image_SSD),title('Outlier map for SSD window size 5 with threshold 1');
+%   subplot(2,3,4),imshow(disparityMap_NCC_LR,[0,64]),title('Left-Right Disparity NCC window size 5'),colormap jet,colorbar;
+%   subplot(2,3,5),imshow(disparityMap_NCC_RL,[0,64]),title('Right-Left Disparity NCC window size 5'),colormap jet, colorbar;
+
+%  figure;
+%  subplot(1,2,1),imshow(binary_image_SSD),title('Outlier map for SSD window size 5 with threshold 1');
+%  subplot(1,2,2),imshow(binary_image_NCC),title('Outlier map for NCC window size 5 with threshold 1');
+
 
 %% Reconstruct the 3-D Scene
 % Reconstruct the 3-D world coordinates of points corresponding to each pixel 
 % from the disparity map.
 
-points3D = reconstructScene(disparityMap, stereoParams);
-
-% Convert to meters and create a pointCloud object
-points3D = points3D ./ 1000;
-ptCloud = pointCloud(points3D, 'Color', frameLeftRect);
-
-% Create a streaming point cloud viewer
-player3D = pcplayer([-3, 3], [-3, 3], [0, 8], 'VerticalAxis', 'y', ...
-    'VerticalAxisDir', 'down');
-
-% Visualize the point cloud
-view(player3D, ptCloud);
+% part Q4.6 Compute depth from disparity
+% disparityMap = disparitySSD(frameLeftGray,frameRightGray,1);
+% points3D = reconstructSceneCU(disparityMap, stereoParams);
+% 
+% % Convert to meters and create a pointCloud object
+%  points3D = points3D ./ 1000;
+% 
+% ptCloud = pointCloud(points3D, 'Color', frameLeftRect);
+% 
+% % Create a streaming point cloud viewer
+% player3D = pcplayer([-3, 3], [-3, 3], [0, 8], 'VerticalAxis', 'y', ...
+%     'VerticalAxisDir', 'down');
+% 
+% % Visualize the point cloud
+% view(player3D, ptCloud);
 %% Detect People in the Left Image
 % Use the |vision.PeopleDetector| system object to detect people.
 

@@ -7,21 +7,21 @@ function[disparityMap] = disparitySSD_unique(frameLeftGray,frameRightGray,window
 % Purpose: Stereo Vision 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  clc;
-%  clear all;
-%  
-%     img_L = imread('frame_1L.png');
-%     img_R = imread('frame_1R.png');
+ clc;
+ clear all;
+ 
+    img_R = imread('frame_1L.png');
+    img_L = imread('frame_1R.png');
 % % testing
 % 
 %   img_L = frameLeftGray;
 %   img_R = frameRightGray;
 %   
-  img_L = frameRightGray;
-  img_R = frameLeftGray;
-% 
-%    img_L = rgb2gray(img_L);
-%    img_R = rgb2gray(img_R);
+%   img_L = frameRightGray;
+%   img_R = frameLeftGray;
+% % 
+   img_L = rgb2gray(img_L);
+   img_R = rgb2gray(img_R);
 
 
 % figure,imshow(img_L);
@@ -32,7 +32,7 @@ function[disparityMap] = disparitySSD_unique(frameLeftGray,frameRightGray,window
  
 max_disparityRang = 64;
 % set up the maximum and minimum disparity ranges
-% windowSize = 5;
+windowSize = 5;
 windowSize_local = windowSize;
 w = round((windowSize_local -1)/2);
 % windowSize = 2w+1, kernal size
@@ -111,11 +111,12 @@ for i = w+1: R_new - w
      100*i/(R_new - w)
 %      counting time remain
 end
- disparityMap = single(disparity);
-%  figure;
-%  imshow(disparityMap,[0,64]);
-%  title('Disparity Map2')
-%  colormap jet
-%  colorbar
+ tempdisp(1:R,1:C,:) = disparity(w+1:R_new-w,w+1:C_new -w,:);
+ disparityMap = single(tempdisp);
+ figure;
+ imshow(disparityMap,[0,64]);
+ title('Disparity Map2')
+ colormap jet
+ colorbar
 
 end
