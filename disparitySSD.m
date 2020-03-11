@@ -31,7 +31,7 @@
  
 max_disparityRang = 64;
 % set up the maximum and minimum disparity ranges
-% windowSize =5;
+%  windowSize =5;
 windowSize_local = windowSize;
 w = round((windowSize_local -1)/2);
 % windowSize = 2w+1, kernal size
@@ -42,6 +42,9 @@ new_imgR = padarray(img_R,[w w],0,'both');
 [R_new, C_new] = size(new_imgL);
 
 disparity = zeros(R_new, C_new);
+
+
+% gaussian
 for i = w+1: R_new - w  
 %     set up the boundary of Row
 
@@ -84,6 +87,7 @@ for i = w+1: R_new - w
                    if windowSize == 1
                         pix_value = sum(sum(new_imgR(i,n)));
                    else
+                      
                        pix_value = sum(sum(new_imgR(i-w+1:i+w,n-w+1:n+w)))/(windowSize_local^2);
                    end
                    diff = sum((pix_value - pix_value_L)^2);

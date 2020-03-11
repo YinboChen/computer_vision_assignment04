@@ -1,4 +1,4 @@
-function[disparityMap] = disparitySSD_unique(frameLeftGray,frameRightGray,windowSize)
+ function[disparityMap] = disparitySSD_smooth2(frameLeftGray, frameRightGray, windowSize,threshold)
  %%%%%%%%%%%%%%%%%%%%%%%%%%
 % CSCI 5722 Computer Vision
 % Name: Yinbo Chen
@@ -6,27 +6,24 @@ function[disparityMap] = disparitySSD_unique(frameLeftGray,frameRightGray,window
 % Assignment: HW4 
 % Purpose: Stereo Vision 
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  clc;
-%  clear all;
-%  
-%     img_R = imread('frame_1L.png');
-%     img_L = imread('frame_1R.png');
-% % testing
-% 
-%   
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% clc;
+% clear all;
+%    img_R = imread('frame_1L.png');
+%    img_L = imread('frame_1R.png');
+% % testing   
   img_L = frameRightGray;
   img_R = frameLeftGray;
-% % 
-%    img_L = rgb2gray(img_L);
-%    img_R = rgb2gray(img_R);
+
+%   img_L = rgb2gray(img_L);
+%   img_R = rgb2gray(img_R);
 
 [R, C] = size(img_L);
 % img_L and R have ready rectified,so the sizes are same
- 
+%  threshold = 15; 
 max_disparityRang = 64;
 % set up the maximum and minimum disparity ranges
-% windowSize = 5;
+% windowSize =5;
 windowSize_local = windowSize;
 w = round((windowSize_local -1)/2);
 % windowSize = 2w+1, kernal size
@@ -37,7 +34,6 @@ new_imgR = padarray(img_R,[w w],0,'both');
 [R_new, C_new] = size(new_imgL);
 
 disparity = zeros(R_new, C_new);
-
 for i = w+1: R_new - w  
 %     set up the boundary of Row
 
@@ -49,19 +45,13 @@ for i = w+1: R_new - w
               pix_value_L = sum(sum(new_imgL(i-w+1:i+w,j-w+1:j+w)))/(windowSize_local^2);
           end
 %    compute whole pixels' values in the window and find the mean value
-          min_diff = 1000;
-          % set up the min diff
+          min_diff = 1000;          
+% set up the min diff
           bestX = 1;
            if j+ max_disparityRang <= C_new-w
 %                set the max disparity range when j+ max-range less than
 %                max column of image
-                for m = j : j+ max_disparityRang 
-                    if min_diff < 0.5
-%                     adding a flag to avoid continual computing and
-%                     stopping for loop
-                       disparity(i,j) = ( bestX - j-1 );
-                       break;
-                   end
+                for m = j : j+ max_disparityRang  
                     if windowSize == 1
                         pix_value = sum(sum(new_imgR(i,m)));
                     else
@@ -69,25 +59,24 @@ for i = w+1: R_new - w
                     end
                    diff = sum((pix_value - pix_value_L)^2);
 %                    find the min different value as well as the best x value
+          
                          if diff< min_diff
                              min_diff = diff;
-                             bestX = m;                                              
+                             bestX = m;
+                     
                          end  
                     
-%                 disparity(i,j) = (new_imgR(i,bestX) - new_imgL(i,j));
-%                 different of intensity
-                disparity(i,j) = ( bestX- j );
-                
+                        d = bestX -j;
+                       
+%                          disparity(i,j) = d;
+%                          disparity(max(1,i-threshold):min(R_new,i+threshold),max(1,j-threshold):min(C_new,j+threshold)) = d;
+                         disparity(i,max(1,j-ceil(threshold/2)):min(C_new,j+ceil(threshold/2))) = d;
+                         
                end
            elseif j+max_disparityRang > C_new-w 
 %                     set the max disparity range when j+ range large than
 %                     image's max column
-               for n = C_new -w - max_disparityRang  : C_new -w 
-                   if min_diff < 0.5
-%                     adding a flag to avoid continual computing
-                       disparity(i,j) = ( bestX - j-1 );
-                       break;
-                   end
+               for n = j : C_new -w 
                    if windowSize == 1
                         pix_value = sum(sum(new_imgR(i,n)));
                    else
@@ -97,8 +86,11 @@ for i = w+1: R_new - w
                          if diff< min_diff
                              min_diff = diff;
                              bestX = n;                         
-                         end                                            
-                    
+                         end  
+                         d = bestX -j;
+                       
+                         disparity(i,max(1,j-ceil(threshold/2)):min(C_new,j+ceil(threshold/2))) = d;
+                         
                end
            end       
     end    
@@ -106,6 +98,12 @@ for i = w+1: R_new - w
 %      counting time remain
 end
  tempdisp(1:R,1:C,:) = disparity(w+1:R_new-w,w+1:C_new -w,:);
+%  if w > 1
+%      disparityMap = single(medfilt2(tempdisp,[w,w]));
+%  else
+%      disparityMap = single(tempdisp);
+%  end
+ 
  disparityMap = single(tempdisp);
 %  figure;
 %  imshow(disparityMap,[0,64]);
@@ -113,4 +111,4 @@ end
 %  colormap jet
 %  colorbar
 
-end
+ end

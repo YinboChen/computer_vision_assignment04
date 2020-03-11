@@ -131,20 +131,20 @@ frameRightGray = rgb2gray(frameRightRect);
 % from the disparity map.
 
 % part Q4.6 Compute depth from disparity
-% disparityMap = disparitySSD(frameLeftGray,frameRightGray,1);
-% points3D = reconstructSceneCU(disparityMap, stereoParams);
-% 
-% % Convert to meters and create a pointCloud object
-%  points3D = points3D ./ 1000;
-% 
-% ptCloud = pointCloud(points3D, 'Color', frameLeftRect);
-% 
-% % Create a streaming point cloud viewer
-% player3D = pcplayer([-3, 3], [-3, 3], [0, 8], 'VerticalAxis', 'y', ...
-%     'VerticalAxisDir', 'down');
-% 
-% % Visualize the point cloud
-% view(player3D, ptCloud);
+disparityMap = disparitySSD(frameLeftGray,frameRightGray,1);
+points3D = reconstructSceneCU(disparityMap, stereoParams);
+
+% Convert to meters and create a pointCloud object
+ points3D = points3D ./ 1000;
+
+ptCloud = pointCloud(points3D, 'Color', frameLeftRect);
+
+% Create a streaming point cloud viewer
+player3D = pcplayer([-3, 3], [-3, 3], [0, 8], 'VerticalAxis', 'y', ...
+    'VerticalAxisDir', 'down');
+
+% Visualize the point cloud
+view(player3D, ptCloud);
 %% Detect People in the Left Image
 % Use the |vision.PeopleDetector| system object to detect people.
 
