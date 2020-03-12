@@ -19,7 +19,7 @@ focal_len = stereoParams.CameraParameters1.FocalLength(1);
 % get focal length
 for i = 1:R
         for j = 1:C
-            value = ((focal_len * baseline) / disparityMap(i,j));
+            value = (( baseline* focal_len) / disparityMap(i,j));
 %             value between 10^3 to 10^4
             points3D(i,j,1) = j;
 % % %             x axi = j
